@@ -152,6 +152,31 @@ module Alchemy
     #
     def update_essence(params = {})
       raise EssenceMissingError if essence.nil?
+
+      if essence.kind_of? Alchemy::EssencePicture
+        if essence.element.page.language_code == 'en'
+          # find all non-english essences w/ the same name
+
+          Alchemy::Content.where(name: essence.content.name).each do |content|
+            next if content.essence == essence
+
+            # copy this picture to every other locale...but let's guard against
+            # the possible intentional "different image for this locale" done in
+            # the past.  Let's assume that if the timestamps are all within
+            # 45 seconds of each other that these were auto-created vs. a content
+            # creator uploading a separate image
+            Rails.logger.error "essence.content_#{essence.content.id}.updated_at: #{essence.content.updated_at} - content_#{content.id}.updated_at: #{content.updated_at}"
+
+            if content.essence.picture.nil? || (essence.content.updated_at - content.updated_at).abs < 45
+              Rails.logger.error "changing content b/c we think it was auto-modified"
+              content.essence.update(params)
+            else
+              Rails.logger.error "not changing content b/c we think it was human-modified"
+            end
+          end
+        end
+      end
+
       if essence.update(params)
         return true
       else
