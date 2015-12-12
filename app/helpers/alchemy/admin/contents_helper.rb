@@ -115,11 +115,7 @@ module Alchemy
             end
           end
         end
-        if links.present?
-          links.unshift('Other translations:')
-        end
-        links.join(' | ')
-
+        links.present? ? "Other translations: #{links.join(' | ')}" : ""
       end
 
       # Renders a link for removing that content

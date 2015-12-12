@@ -78,6 +78,7 @@ module Alchemy
 
           Rails.logger.error "[ALCHEMY_LOCALE] updating contents for element in elements_controller#update: #{@element}"
           update_translations(@element) if @element.page.language.language_code == 'en'
+          update_skip_translate(params[:skip_translate]) unless params[:skip_translate].nil?
         else
           @element_validated = false
           @notice = _t('Validation failed')
@@ -121,6 +122,7 @@ module Alchemy
 
         element.essences.each do |essence|
           next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
+          next if essence.content.skip_translate
           position = essence.element.position
           key = "#{essence.content.name}_pos_#{position}"
 
@@ -135,6 +137,13 @@ module Alchemy
 
         Localeapp.sender.post_missing_translations
         Alchemy::TranslationSentEmail.new.perform(Localeapp.missing_translations.to_send.to_json)
+      end
+
+      def update_skip_translate(skip_translate_hash)
+        skip_translate_hash.each do |content_id, value|
+          content = Alchemy::Content.find content_id
+          content.update(skip_translate: value)
+        end
       end
 
       def load_element

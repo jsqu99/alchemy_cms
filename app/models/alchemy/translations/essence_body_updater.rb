@@ -41,7 +41,7 @@ module Alchemy
                 Rails.logger.error "PROBLEM finding content for content_id #{content_id} : #{essence_key} (locale: #{locale})"
                 nil
               end
-              if content && content.essence
+              if content && content.essence && !content.skip_translate
                 content.essence.update_column(:body, translation)
                 if content.essence.kind_of? Alchemy::EssenceRichtext
                   content.essence.send(:strip_content)

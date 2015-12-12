@@ -29,3 +29,7 @@
 @import "alchemy/jquery-ui";
 @import "jquery.Jcrop.min";
 @import "alchemy/custom";
+.cms-user-link{
+  white-space:normal !important;
+  word-wrap:break-word;
+}

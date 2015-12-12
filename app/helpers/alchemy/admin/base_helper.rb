@@ -20,7 +20,7 @@ module Alchemy
       # you should add a +alchemy_display_name+ method to your +User+ class
       #
       def current_alchemy_user_name
-        name = current_alchemy_user.try(:alchemy_display_name)
+        name = current_alchemy_user.try(:email)
         if name.present?
           content_tag :span, "#{_t('Logged in as')} #{name}", class: 'current-user-name'
         end

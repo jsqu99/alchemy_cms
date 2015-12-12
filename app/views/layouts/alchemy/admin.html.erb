@@ -54,6 +54,15 @@
         <% end %>
         <%= yield(:alchemy_main_navigation) %>
       </div>
+      <% if current_cms_user.admin? %>
+        <div id='manage_my_account'>
+          <strong><%= link_to "Manage CMS Users", main_app.cms_users_path, class: 'cms-user-link' %></strong>
+        </div>
+      <% end %>
+      <br>
+      <div id='change_my_password'>
+        <strong><%= link_to "Change password", main_app.edit_cms_user_registration_path, class: 'cms-user-link' %></strong>
+      </div>
       <div id="logout">
         <% if current_alchemy_user %>
           <%= link_to_dialog(
