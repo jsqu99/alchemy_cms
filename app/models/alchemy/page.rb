@@ -61,6 +61,7 @@ module Alchemy
       :tag_list,
       :title,
       :urlname,
+      :canonical_url,
       :visible,
       :layoutpage
     ]
@@ -88,6 +89,7 @@ module Alchemy
     before_save :update_published_at, if: -> { public && read_attribute(:published_at).nil? }, unless: :systempage?
     before_create :set_language_from_parent_or_default, if: -> { language_id.blank? }, unless: :systempage?
     after_update :create_legacy_url, if: :urlname_changed?, unless: :redirects_to_external?
+    before_validation :set_canonical_url
 
     # Concerns
     include Alchemy::Page::PageScopes
@@ -407,5 +409,10 @@ module Alchemy
       self.published_at = Time.now
     end
 
+    def set_canonical_url
+      unless canonical_url.present?
+        update_column(:canonical_url, ENV['FASTLY_URL'] + "/" + urlname)
+      end
+    end
   end
 end

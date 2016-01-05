@@ -30,6 +30,7 @@
   <h2><%= _t(:names) %></h2>
   <%= f.input :name, autofocus: true %>
   <%= f.input :urlname, as: 'string', input_html: {value: @page.slug} %>
+  <%= f.input :canonical_url, as: 'string', input_html: {value: @page.canonical_url.present? ? @page.canonical_url : "#{request.scheme}://#{request.host}/#{@page.slug}"} %>
   <%= f.input :title,
     input_html: {'data-alchemy-char-counter' => 60} %>
   <h2><%= _t(:meta_data) %></h2>

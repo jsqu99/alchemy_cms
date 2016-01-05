@@ -379,6 +379,12 @@ module Alchemy
       return meta_string.html_safe
     end
 
+    def render_canonical_url
+      %(
+          <link rel="canonical" href="#{@page.canonical_url || show_alchemy_page_url(@page)}">
+       ).html_safe
+    end
+
     # Renders the partial for the cell with the given name of the current page.
     # Cell partials are located in +app/views/cells/+ of your project.
     #
