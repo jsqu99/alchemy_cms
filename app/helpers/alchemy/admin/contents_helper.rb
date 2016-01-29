@@ -94,8 +94,8 @@ module Alchemy
         links = []
 
         if h = Alchemy::Translations::Cacher.new.all_translated_content
-          position = content.essence.element.position
-          key = "#{content.name}_pos_#{position}"
+          key_gen = Alchemy::Translations::HashKeyGenerator.new(content)
+          key = key_gen.generate
 
           if h[key]
             # now what locales do we have for this content?

@@ -123,8 +123,8 @@ module Alchemy
         element.essences.each do |essence|
           next unless [Alchemy::EssenceText,Alchemy::EssenceRichtext,Alchemy::EssenceHtml].include? essence.class
           next if essence.content.skip_translate
-          position = essence.element.position
-          key = "#{essence.content.name}_pos_#{position}"
+          key_gen = Alchemy::Translations::HashKeyGenerator.new(essence.content)
+          key = key_gen.generate
 
           description = essence.body
 
